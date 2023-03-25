@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<th:block th:fragment="modalCreate">
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title fs-5">Create Customer</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-alert-danger hide"></div>
+                <form id="formCreateProduct" method="post">
+                    <div class="modal-body">
+                        <fieldset class="row g-3">
+                            <div class="col-lg-7">
+                                <div class="col-md-12">
+                                    <label for="productNameCre" class="form-label">Product Name</label>
+                                    <input class="col-md-12 form-control" type="text" id="productNameCre"
+                                           name="productNameCre">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="priceCre" class="form-label">Price</label>
+                                    <input class="col-md-12 form-control" type="text" id="priceCre"
+                                           name="priceCre">
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="quantityCre" class="form-label">Quantity</label>
+                                    <input class="col-md-12 form-control" type="text" id="quantityCre"
+                                           name="quantityCre">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="idCategory" class="">Recipient Name</label>
+                                    <select class="col-md-12 form-control" id="idCategory" name="idCategory">
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Description</label>
+                                    <textarea id="descriptionCre" name="descriptionCre" rows="5" class="form-control border-input" placeholder="Here can be product's description" value=""></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <section>
+                                    <div class="wrapper active">
+                                        <div class="image-preview">
+                                            <canvas id="canvas" style="display: none;"></canvas>
+                                        </div>
+                                        <div class="content">
+                                            <div class="icon">
+                                                <i class="fas fa-cloud-upload-alt"></i>
+                                            </div>
+                                            <div class="text">
+                                                No file chosen, yet!
+                                            </div>
+                                            <div class="text">
+                                                Max file size = 2MB
+                                            </div>
+                                        </div>
+                                        <div class="clear-image-preview">
+                                            <i class="fas fa-times"></i>
+                                        </div>
+                                        <div class="file-name">
+                                            Change image
+                                        </div>
+                                    </div>
+                                    <input type="file" id="imageFile" accept="image/jpeg, image/png" hidden="">
+                                </section>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
