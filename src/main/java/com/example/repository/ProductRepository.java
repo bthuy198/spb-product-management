@@ -5,9 +5,11 @@ import com.example.model.dto.ProductDTO;
 import com.example.model.dto.ProductResDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -44,4 +46,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE p.deleted = false "
     )
     List<ProductResDTO> findAllProductResDTOByDeletedIsFalse();
+    @Query("SELECT NEW com.example.model.dto.ProductResDTO (" +
+            "p.id, " +
+            "p.productName, " +
+            "p.price, " +
+            "p.quantity, " +
+            "p.description, " +
+            "pa.id," +
+            "pa.fileFolder, " +
+            "pa.fileName, " +
+            "pa.fileUrl, " +
+            "p.category" +
+            ") " +
+            "FROM Product AS p " +
+            "LEFT JOIN ProductAvatar AS pa " +
+            "ON pa.product = p " +
+            "WHERE p.deleted = false " +
+            "AND p.id = :id "
+    )
+    Optional<ProductResDTO> findProductResDTOByDeletedIsFalse(@Param("id") Long id);
 }

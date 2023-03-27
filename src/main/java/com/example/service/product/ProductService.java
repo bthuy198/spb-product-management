@@ -7,6 +7,7 @@ import com.example.model.ProductAvatar;
 import com.example.model.dto.ProductCreateAvatarResDTO;
 import com.example.model.dto.ProductDTO;
 import com.example.model.dto.ProductResDTO;
+import com.example.model.dto.ProductUpdateAvatarResDTO;
 import com.example.repository.ProductAvatarRepository;
 import com.example.repository.ProductRepository;
 import com.example.service.uploadMedia.UploadService;
@@ -53,6 +54,61 @@ public class ProductService implements IProductService{
         return productRepository.findAllProductResDTOByDeletedIsFalse();
     }
 
+    @Override
+    public Optional<ProductResDTO> findProductResDTOByDeletedIsFalse(Long id) {
+        return productRepository.findProductResDTOByDeletedIsFalse(id);
+    }
+
+    @Override
+    public ProductUpdateAvatarResDTO update(Product product) {
+        productRepository.save(product);
+        ProductAvatar productAvatar = productAvatarRepository.findByProduct(product).get();
+
+        return new ProductUpdateAvatarResDTO(product, productAvatar.toProductAvatarDTO());
+    }
+
+
+    @Override
+    public ProductUpdateAvatarResDTO updateWithAvatar(Product product, MultipartFile avatarFile) throws IOException {
+        productRepository.save(product);
+
+        Optional<ProductAvatar> productAvatarOptional = productAvatarRepository.findByProduct(product);
+
+        ProductAvatar productAvatar = new ProductAvatar();
+
+        if (!productAvatarOptional.isPresent()) {
+            productAvatar.setProduct(product);
+
+            productAvatarRepository.save(productAvatar);
+
+            uploadAndSaveCustomerAvatar(avatarFile, productAvatar);
+        }
+        else {
+            productAvatar = productAvatarOptional.get();
+            uploadService.destroyImage(productAvatar.getCloudId(), uploadUtils.buildImageUploadParams(productAvatar));
+            uploadAndSaveCustomerAvatar(avatarFile, productAvatar);
+        }
+
+        return new ProductUpdateAvatarResDTO(product, productAvatar.toProductAvatarDTO());
+    }
+
+    private void uploadAndSaveCustomerAvatar(MultipartFile file, ProductAvatar productAvatar) {
+        try {
+            Map uploadResult = uploadService.uploadImage(file, uploadUtils.buildImageUploadParams(productAvatar));
+            String fileUrl = (String) uploadResult.get("secure_url");
+            String fileFormat = (String) uploadResult.get("format");
+
+            productAvatar.setFileName(productAvatar.getId() + "." + fileFormat);
+            productAvatar.setFileUrl(fileUrl);
+            productAvatar.setFileFolder(uploadUtils.IMAGE_UPLOAD_FOLDER);
+            productAvatar.setCloudId(productAvatar.getFileFolder() + "/" + productAvatar.getId());
+            productAvatarRepository.save(productAvatar);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new DataInputException("Upload image fail");
+        }
+    }
     @Override
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
@@ -104,5 +160,8 @@ public class ProductService implements IProductService{
 
     @Override
     public void delete(Product product) {
+        product.setDeleted(true);
+        productRepository.save(product);
     }
+
 }

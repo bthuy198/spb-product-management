@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
-.container .wrapper{
+.container-fluid .wrapper{
     position: relative;
-    height: 345px;
+    height:300px;
     width: 100%;
     border-radius: 10px;
     background: #fff;
@@ -26,7 +26,7 @@
 }
 
 .wrapper .image-preview{
-    position: relative;
+    position: absolute;
     height: 100%;
     width: 100%;
     display: flex;
@@ -66,9 +66,9 @@
 }
 
 .wrapper .file-name{
-    position: relative;
+    position: absolute;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     padding: 8px 0;
     font-size: 18px;
     color: #fff;
@@ -81,7 +81,7 @@
     display: block;
 }
 
-.container #custom-btn{
+.container-fluid #custom-btn{
     margin-top: 30px;
     display: block;
     width: 100%;
@@ -99,7 +99,7 @@
 }
 
 canvas {
-    width: 50%;
+    width: 100%;
     height: 100%;
     position: relative;
 }

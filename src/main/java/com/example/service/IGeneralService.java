@@ -1,6 +1,8 @@
 package com.example.service;
 
 
+import com.example.model.Product;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +16,5 @@ public interface IGeneralService<T> {
 
     void delete(T t);
 
-//    Customer deleteById(Long id);
+//    Product deleteById(Long id);
 }

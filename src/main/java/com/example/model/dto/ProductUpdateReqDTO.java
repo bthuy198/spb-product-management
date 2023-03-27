@@ -1,7 +1,6 @@
 package com.example.model.dto;
 
 import com.example.model.Category;
-import com.example.model.EFileType;
 import com.example.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,49 +16,28 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProductCreateAvatarReqDTO implements Validator {
+public class ProductUpdateReqDTO implements Validator {
     private Long id;
     private String productName;
     private String price;
     private String quantity;
     private String description;
     private String categoryId;
-    private MultipartFile file;
 
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return ProductCreateAvatarReqDTO.class.isAssignableFrom(clazz);
+        return ProductUpdateReqDTO.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ProductCreateAvatarReqDTO productCreateDTO = (ProductCreateAvatarReqDTO) target;
+        ProductUpdateReqDTO productUpdateReqDTO = (ProductUpdateReqDTO) target;
 
-        String productName = productCreateDTO.getProductName().trim();
-        String price = productCreateDTO.getPrice();
-        String quantity = productCreateDTO.getQuantity();
-        String categoryId = productCreateDTO.getCategoryId();
-        MultipartFile multipartFile = productCreateDTO.getFile();
-        if (multipartFile == null || multipartFile.getSize() == 0) {
-            errors.rejectValue("file", "file.null", "Vui lòng chọn tệp tin làm ảnh đại diện");
-            return;
-        }
-
-        String file = multipartFile.getContentType();
-        assert file != null;
-        file = file.substring(0, 5);
-
-        if (!file.equals(EFileType.IMAGE.getValue())) {
-            errors.rejectValue("file", "file.type", "Vui lòng chọn tệp tin ảnh đại diện phải là JPG hoặc PNG");
-            return;
-        }
-
-        long fileSize = multipartFile.getSize();
-
-        if (fileSize > 512000) {
-            errors.rejectValue("file", "file.size", "Vui lòng chọn tệp tin ảnh đại diện nhỏ hơn 500 KB");
-        }
+        String productName = productUpdateReqDTO.getProductName().trim();
+        String price = productUpdateReqDTO.getPrice();
+        String quantity = productUpdateReqDTO.getQuantity();
+        String categoryId = productUpdateReqDTO.getCategoryId();
 
         if (productName == null) {
             errors.rejectValue("productName", "productName.null", "Product Name must not be null");
@@ -88,7 +66,6 @@ public class ProductCreateAvatarReqDTO implements Validator {
         } else{
             errors.rejectValue("categoryId", "categoryId.null", "Category's id must not be null");
         }
-
     }
 
     public Product toProduct(Category category){
